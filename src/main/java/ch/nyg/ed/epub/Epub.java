@@ -1,5 +1,6 @@
 package ch.nyg.ed.epub;
 
+import ch.nyg.ed.model.opf.Item;
 import ch.nyg.ed.model.opf.Package;
 import ch.nyg.java.util.LogUtil;
 
@@ -9,17 +10,33 @@ import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.Deflater;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Epub {
 
-    private Opf opf;
+    protected final Opf opf;
 
-    public void makeZip() throws IOException, JAXBException {
+    public Epub() {
+        opf = new Opf();
+    }
 
-        File f = new File("dictionary.epub");
+    public void setTitle(String title) {
+        opf.setTitle(title);
+    }
+
+    public void setLanguage(String lang) {
+        opf.setLanguage(lang);
+    }
+
+    public void addFile(String filename, String mediaType) {
+        opf.addItem(filename, mediaType);
+    }
+
+    public void make(String filename) throws IOException, JAXBException {
+
+        File f = new File(filename);
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
 
         /* mimetype */
@@ -45,17 +62,43 @@ public class Epub {
         getMarshaller(Package.class).marshal(opf.getPackage(), out);
         out.closeEntry();
 
+        /* Manifest files */
+        for (Item item : opf.getPackage().getManifest().getItemList()) {
+
+            if (item.getId().equals("nav")) {
+                continue;
+            }
+
+            // TODO buffer + charset ?
+
+            e = new ZipEntry("EPUB/" + item.getHref());
+            out.putNextEntry(e);
+
+            int len = 0;
+            byte[] buf = new byte[4096];
+            InputStream in = getClass().getResourceAsStream("/"+ item.getHref());
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+
+            out.closeEntry();
+        }
+
         /* Nav */
         e = new ZipEntry("EPUB/nav.xhtml");
         out.putNextEntry(e);
-        out.write(new Nav().render().getBytes());
+
+        Nav nav = new Nav();
+        nav.setItems(opf.getPackage().getManifest().getItemList());
+        out.write(nav.render().getBytes());
         out.closeEntry();
 
-        /* Lexicon */
+        /* Lexicon
         e = new ZipEntry("EPUB/lexicon0.xhtml");
         out.putNextEntry(e);
         out.write(new Lexicon().render().getBytes());
         out.closeEntry();
+        */
 
         out.close();
     }
@@ -72,9 +115,5 @@ public class Epub {
             LogUtil.severe(e);
             return null;
         }
-    }
-
-    public void setOpf(Opf opf) {
-        this.opf = opf;
     }
 }
