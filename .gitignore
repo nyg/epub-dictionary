@@ -5,3 +5,7 @@ target
 .idea
 .DS_Store
 epub-dictonary.iml
+EPUB
+META-INF
+mimetype
+*.epub
