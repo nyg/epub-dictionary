@@ -38,8 +38,8 @@ public class Epub {
         opf.setLanguage(lang);
     }
 
-    public void addFile(String filename, String mediaType) {
-        opf.addItem(filename, mediaType);
+    public void addFile(String filename, String mediaType, String properties, boolean addToSpine) {
+        opf.addItem(filename, mediaType, properties, addToSpine);
     }
 
     public void setCreator(String creator) {
@@ -84,7 +84,7 @@ public class Epub {
         out.closeEntry();
 
         /* OPF */
-        e = new ZipEntry("EPUB/Dictionary.opf");
+        e = new ZipEntry("EPUB/content.opf");
         out.putNextEntry(e);
         getMarshaller(Package.class).marshal(opf.getPackage(), out);
         out.closeEntry();

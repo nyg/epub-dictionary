@@ -11,7 +11,7 @@ public class Container {
         container.setVersion(1);
 
         RootFile rootFile = new RootFile();
-        rootFile.setFullPath("EPUB/Dictionary.opf"); // TODO dict name
+        rootFile.setFullPath("EPUB/content.opf"); // TODO dict name
         rootFile.setMediaType("application/oebps-package+xml");
         container.addRootFile(rootFile);
     }

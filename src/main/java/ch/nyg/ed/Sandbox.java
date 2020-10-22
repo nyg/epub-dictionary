@@ -19,7 +19,8 @@ public class Sandbox {
         epub.setPublisher("One Day Publisher");
         epub.setPublicationDate(LocalDateTime.of(1991, Month.AUGUST, 1, 0, 0));
         epub.setLanguage("en");
-        epub.addFile("only-one.xhtml", "application/xhtml+xml");
+        epub.addFile("only-one.xhtml", "application/xhtml+xml", null, true);
+        epub.addFile("cover.jpg", "image/jpeg", "cover-image", false);
         epub.make("one-page-book.epub");
 
 //        Dictionary dict = new Dictionary();

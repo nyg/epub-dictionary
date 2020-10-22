@@ -34,7 +34,7 @@ public class Nav {
                         nav(
                                 ol(
                                         // TODO filter some elements
-                                        each(filter(items, i -> !i.getId().equals("nav")),
+                                        each(filter(items, i -> i.getProperties() == null),
                                                 item -> li(a(item.getId()).withHref(item.getHref())))
                                 )
                         ).attr("epub:type", "toc")

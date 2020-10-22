@@ -63,7 +63,7 @@ public class Opf {
         pkg.getMetadata().setPublisher(publisher);
     }
 
-    public void addItem(String filename, String mediaType) {
+    public void addItem(String filename, String mediaType, String properties, boolean addToSpine) {
 
         String id = filename.split("\\.")[0]; // TODO
 
@@ -71,12 +71,16 @@ public class Opf {
         item.setHref(filename);
         item.setId(id);
         item.setMediaType(mediaType);
+        item.setProperties(properties);
 
         Itemref itemref = new Itemref();
         itemref.setIdref(id);
 
         pkg.getManifest().getItemList().add(item);
-        pkg.getSpine().getItemrefList().add(itemref); // TODO not always the case
+
+        if (addToSpine) {
+            pkg.getSpine().getItemrefList().add(itemref);
+        }
     }
 
     private Metadata initMetadata() {

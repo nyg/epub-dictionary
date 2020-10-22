@@ -9,13 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-/*<?xml version="1.0"?>
-<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-    <rootfiles>
-        <rootfile full-path="EPUB/My_Crazy_Life.opf"
-            media-type="application/oebps-package+xml" />
-    </rootfiles>
-</container>*/
 @XmlRootElement(namespace = "urn:oasis:names:tc:opendocument:xmlns:container")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Container {
