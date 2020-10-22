@@ -30,6 +30,9 @@ public class Metadata {
     @XmlElement(namespace = "http://purl.org/dc/elements/1.1/")
     private Type type;
 
+    @XmlElement(namespace = "http://purl.org/dc/elements/1.1/")
+    private String creator;
+
     @XmlElement(name = "meta")
     private final List<Meta> metaList = new ArrayList<>();
 
@@ -66,6 +69,14 @@ public class Metadata {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public List<Meta> getMetaList() {

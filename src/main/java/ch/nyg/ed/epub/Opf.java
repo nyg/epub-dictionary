@@ -15,6 +15,7 @@ import ch.nyg.ed.model.opf.Spine;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Opf {
 
@@ -39,6 +40,10 @@ public class Opf {
 
     public void setLanguage(String language) {
         pkg.getMetadata().getLanguage().setValue(language);
+    }
+
+    public void setCreator(String creator) {
+        pkg.getMetadata().setCreator(creator);
     }
 
     public void setType(String value) {
@@ -67,7 +72,7 @@ public class Opf {
 
         Identifier identifier = new Identifier();
         identifier.setId("uid"); // TODO string constant
-        identifier.setValue("1234-5678"); // TODO generate uuid
+        identifier.setValue("urn:uuid:" + UUID.randomUUID().toString());
 
         Title title = new Title();
         Language language = new Language();

@@ -40,6 +40,10 @@ public class Epub {
         opf.addItem(filename, mediaType);
     }
 
+    public void setCreator(String creator) {
+        opf.setCreator(creator);
+    }
+
     public void make(String filename) throws IOException, JAXBException {
 
         // Update modified date
