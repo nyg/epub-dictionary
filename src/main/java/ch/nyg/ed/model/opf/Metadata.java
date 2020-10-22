@@ -33,6 +33,9 @@ public class Metadata {
     @XmlElement(namespace = "http://purl.org/dc/elements/1.1/")
     private String creator;
 
+    @XmlElement(namespace = "http://purl.org/dc/elements/1.1/")
+    private String date;
+
     @XmlElement(name = "meta")
     private final List<Meta> metaList = new ArrayList<>();
 
@@ -77,6 +80,14 @@ public class Metadata {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public List<Meta> getMetaList() {

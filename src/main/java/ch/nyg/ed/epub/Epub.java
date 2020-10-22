@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,6 +44,10 @@ public class Epub {
 
     public void setCreator(String creator) {
         opf.setCreator(creator);
+    }
+
+    public void setPublicationDate(LocalDateTime date) {
+        opf.setDate(date);
     }
 
     public void make(String filename) throws IOException, JAXBException {

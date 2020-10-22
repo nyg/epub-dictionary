@@ -13,6 +13,9 @@ import ch.nyg.ed.model.opf.Package;
 import ch.nyg.ed.model.opf.Spine;
 
 import javax.xml.namespace.QName;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,14 +45,18 @@ public class Opf {
         pkg.getMetadata().getLanguage().setValue(language);
     }
 
-    public void setCreator(String creator) {
-        pkg.getMetadata().setCreator(creator);
-    }
-
     public void setType(String value) {
         Type type = new Type();
         type.setValue(value);
         pkg.getMetadata().setType(type);
+    }
+
+    public void setCreator(String creator) {
+        pkg.getMetadata().setCreator(creator);
+    }
+
+    public void setDate(LocalDateTime date) {
+        pkg.getMetadata().setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")));
     }
 
     public void addItem(String filename, String mediaType) {
