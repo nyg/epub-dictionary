@@ -1,16 +1,22 @@
 package ch.nyg.ed.epub;
 
 import ch.nyg.ed.model.opf.Item;
+import ch.nyg.ed.model.opf.Meta;
 import ch.nyg.ed.model.opf.Package;
 import ch.nyg.java.util.LogUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -36,6 +42,13 @@ public class Epub {
 
     public void make(String filename) throws IOException, JAXBException {
 
+        // Update modified date
+        Meta modified = new Meta();
+        modified.setProperty(new QName("http://purl.org/dc/terms/", "modified", "dcterms"));
+        modified.setValue(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")));
+        opf.getPackage().getMetadata().getMetaList().add(modified);
+
+        // Create ZIP file
         File f = new File(filename);
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
 
@@ -76,7 +89,7 @@ public class Epub {
 
             int len = 0;
             byte[] buf = new byte[4096];
-            InputStream in = getClass().getResourceAsStream("/"+ item.getHref());
+            InputStream in = getClass().getResourceAsStream("/" + item.getHref());
             while ((len = in.read(buf)) != -1) {
                 out.write(buf, 0, len);
             }

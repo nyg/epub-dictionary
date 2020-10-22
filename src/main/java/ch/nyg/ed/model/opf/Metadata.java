@@ -8,6 +8,7 @@ import ch.nyg.ed.model.dc.Type;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +31,7 @@ public class Metadata {
     private Type type;
 
     @XmlElement(name = "meta")
-    private List<Meta> metaList;
+    private final List<Meta> metaList = new ArrayList<>();
 
     public Metadata() {
     }
@@ -69,9 +70,5 @@ public class Metadata {
 
     public List<Meta> getMetaList() {
         return metaList;
-    }
-
-    public void setMetaList(List<Meta> metaList) {
-        this.metaList = metaList;
     }
 }

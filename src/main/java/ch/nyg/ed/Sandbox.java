@@ -1,8 +1,6 @@
 package ch.nyg.ed;
 
 import ch.nyg.ed.epub.Epub;
-import ch.nyg.ed.epub.Dictionary;
-import ch.nyg.ed.epub.Opf;
 
 import java.util.logging.Logger;
 

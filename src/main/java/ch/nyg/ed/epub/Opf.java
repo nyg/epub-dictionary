@@ -72,19 +72,10 @@ public class Opf {
         Title title = new Title();
         Language language = new Language();
 
-        // TODO update value when creating opf
-        Meta meta = new Meta();
-        meta.setProperty(new QName("http://purl.org/dc/terms/", "modified", "dcterms"));
-        meta.setValue("2020-10-13T20:20:20Z");
-
-        List<Meta> metaList = new ArrayList<>();
-        metaList.add(meta);
-
         Metadata metadata = new Metadata();
         metadata.setIdentifier(identifier);
         metadata.setTitle(title);
         metadata.setLanguage(language);
-        metadata.setMetaList(metaList);
 
         return metadata;
     }
@@ -110,5 +101,4 @@ public class Opf {
         spine.setItemrefList(new ArrayList<>());
         return spine;
     }
-
 }
