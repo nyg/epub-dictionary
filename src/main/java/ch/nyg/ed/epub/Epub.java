@@ -50,6 +50,10 @@ public class Epub {
         opf.setDate(date);
     }
 
+    public void setPublisher(String publisher) {
+        opf.setPublisher(publisher);
+    }
+
     public void make(String filename) throws IOException, JAXBException {
 
         // Update modified date
@@ -139,4 +143,5 @@ public class Epub {
             return null;
         }
     }
+
 }

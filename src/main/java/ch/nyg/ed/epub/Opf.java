@@ -59,6 +59,10 @@ public class Opf {
         pkg.getMetadata().setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")));
     }
 
+    public void setPublisher(String publisher) {
+        pkg.getMetadata().setPublisher(publisher);
+    }
+
     public void addItem(String filename, String mediaType) {
 
         String id = filename.split("\\.")[0]; // TODO
@@ -81,13 +85,11 @@ public class Opf {
         identifier.setId("uid"); // TODO string constant
         identifier.setValue("urn:uuid:" + UUID.randomUUID().toString());
 
-        Title title = new Title();
-        Language language = new Language();
-
         Metadata metadata = new Metadata();
         metadata.setIdentifier(identifier);
-        metadata.setTitle(title);
-        metadata.setLanguage(language);
+        metadata.setTitle(new Title());
+        metadata.setLanguage(new Language());
+        metadata.setPublisher("nyg/epub-dictionary");
 
         return metadata;
     }

@@ -16,6 +16,7 @@ public class Sandbox {
         Epub epub = new Epub();
         epub.setTitle("The One-Page Book");
         epub.setCreator("John Smith");
+        epub.setPublisher("One Day Publisher");
         epub.setPublicationDate(LocalDateTime.of(1991, Month.AUGUST, 1, 0, 0));
         epub.setLanguage("en");
         epub.addFile("only-one.xhtml", "application/xhtml+xml");
