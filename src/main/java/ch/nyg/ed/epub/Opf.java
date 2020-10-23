@@ -3,24 +3,25 @@ package ch.nyg.ed.epub;
 import ch.nyg.ed.model.dc.Type;
 import ch.nyg.ed.model.opf.Item;
 import ch.nyg.ed.model.opf.Itemref;
+import ch.nyg.ed.model.opf.Meta;
 import ch.nyg.ed.model.opf.Package;
 
+import javax.xml.namespace.QName;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Opf {
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private final Package pkg = new Package();
 
     public Opf() {
         pkg.setVersion(3);
         pkg.getMetadata().setPublisher("nyg/epub-dictionary");
-
-        // TODO user should set this value uid
-        pkg.getMetadata().getIdentifier().setValue("urn:uuid:" + UUID.randomUUID().toString());
-
-        addItem("nav.xhtml", "application/xhtml+xml", "nav", true);
+        pkg.getMetadata().getIdentifier().setValue("urn:uuid:" + UUID.randomUUID().toString()); // TODO user should set this value uid
     }
 
     public Package getPackage() {
@@ -45,31 +46,44 @@ public class Opf {
         pkg.getMetadata().setCreator(creator);
     }
 
-    public void setDate(LocalDateTime date) {
-        pkg.getMetadata().setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")));
+    public void setModificationDate(ZonedDateTime date) {
+        Meta meta = new Meta();
+        meta.setProperty(new QName("http://purl.org/dc/terms/", "modified", "dcterms"));
+        meta.setValue(DATE_FORMAT.format(date));
+        getPackage().getMetadata().getMetaList().add(meta);
+    }
+
+    public void setPublicationDate(ZonedDateTime date) {
+        pkg.getMetadata().setDate(DATE_FORMAT.format(date));
     }
 
     public void setPublisher(String publisher) {
         pkg.getMetadata().setPublisher(publisher);
     }
 
-    public void addItem(String filename, String mediaType, String properties, boolean addToSpine) {
+    public void addManifestItem(String filename, String mediaType) {
+        addManifestItem(filename, mediaType, null, -1);
+    }
 
-        String id = filename.split("\\.")[0]; // TODO
+    public void addManifestItem(String filename, String mediaType, String properties) {
+        addManifestItem(filename, mediaType, properties, -1);
+    }
 
+    public void addManifestItem(String filename, String mediaType, String properties, int spineIndex) {
+
+        // add manifest item
         Item item = new Item();
         item.setHref(filename);
-        item.setId(id);
+        item.setId(filename);
         item.setMediaType(mediaType);
         item.setProperties(properties);
-
-        Itemref itemref = new Itemref();
-        itemref.setIdref(id);
-
         pkg.getManifest().getItems().add(item);
 
-        if (addToSpine) {
-            pkg.getSpine().getItemRefs().add(itemref);
+        // add spine itemref if desired
+        if (spineIndex != -1) {
+            Itemref itemref = new Itemref();
+            itemref.setIdref(filename);
+            pkg.getSpine().getItemRefs().add(spineIndex, itemref);
         }
     }
 }
