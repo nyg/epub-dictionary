@@ -9,21 +9,10 @@ import javax.xml.bind.annotation.XmlValue;
 public class Identifier {
 
     @XmlAttribute
-    private String id;
+    private final String id = "uid";
 
     @XmlValue
     private String value;
-
-    public Identifier() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getValue() {
         return value;

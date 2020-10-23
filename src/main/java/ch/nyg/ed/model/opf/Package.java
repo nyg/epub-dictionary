@@ -13,7 +13,7 @@ public class Package {
     /* Required attributes */
 
     @XmlAttribute(name = "unique-identifier", required = true)
-    private String uniqueIdentifier;
+    private final String uniqueIdentifier = "uid";
 
     @XmlAttribute(required = true)
     private float version;
@@ -21,15 +21,16 @@ public class Package {
     /* Required elements */
 
     @XmlElement(required = true)
-    private Metadata metadata;
+    private final Metadata metadata = new Metadata();
 
     @XmlElement(required = true)
-    private Manifest manifest;
+    private final Manifest manifest = new Manifest();
 
     @XmlElement(required = true)
-    private Spine spine;
+    private final Spine spine = new Spine();
 
-    public Package() {
+    public String getUniqueIdentifier() {
+        return uniqueIdentifier;
     }
 
     public float getVersion() {
@@ -40,35 +41,15 @@ public class Package {
         this.version = version;
     }
 
-    public String getUniqueIdentifier() {
-        return uniqueIdentifier;
-    }
-
-    public void setUniqueIdentifier(String uniqueIdentifier) {
-        this.uniqueIdentifier = uniqueIdentifier;
-    }
-
     public Metadata getMetadata() {
         return metadata;
-    }
-
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
     }
 
     public Manifest getManifest() {
         return manifest;
     }
 
-    public void setManifest(Manifest manifest) {
-        this.manifest = manifest;
-    }
-
     public Spine getSpine() {
         return spine;
-    }
-
-    public void setSpine(Spine spine) {
-        this.spine = spine;
     }
 }

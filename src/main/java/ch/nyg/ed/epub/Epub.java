@@ -13,12 +13,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -38,10 +35,6 @@ public class Epub {
         opf.setLanguage(lang);
     }
 
-    public void addFile(String filename, String mediaType, String properties, boolean addToSpine) {
-        opf.addItem(filename, mediaType, properties, addToSpine);
-    }
-
     public void setCreator(String creator) {
         opf.setCreator(creator);
     }
@@ -52,6 +45,10 @@ public class Epub {
 
     public void setPublisher(String publisher) {
         opf.setPublisher(publisher);
+    }
+
+    public void addFile(String filename, String mediaType, String properties, boolean addToSpine) {
+        opf.addItem(filename, mediaType, properties, addToSpine);
     }
 
     public void make(String filename) throws IOException, JAXBException {
@@ -90,42 +87,28 @@ public class Epub {
         out.closeEntry();
 
         /* Manifest files */
-        for (Item item : opf.getPackage().getManifest().getItemList()) {
-
-            if (item.getId().equals("nav")) {
-                continue;
-            }
-
-            // TODO buffer + charset ?
+        // TODO buffer + charset ?
+        for (Item item : opf.getPackage().getManifest().getItems()) {
 
             e = new ZipEntry("EPUB/" + item.getHref());
             out.putNextEntry(e);
 
-            int len = 0;
-            byte[] buf = new byte[4096];
-            InputStream in = getClass().getResourceAsStream("/" + item.getHref());
-            while ((len = in.read(buf)) != -1) {
-                out.write(buf, 0, len);
+            if (item.getId().equals("nav")) {
+                Nav nav = new Nav();
+                nav.setItems(opf.getPackage().getManifest().getItems());
+                out.write(nav.render().getBytes());
+            }
+            else {
+                int len = 0;
+                byte[] buf = new byte[4096];
+                InputStream in = getClass().getResourceAsStream("/" + item.getHref());
+                while ((len = in.read(buf)) != -1) {
+                    out.write(buf, 0, len);
+                }
             }
 
             out.closeEntry();
         }
-
-        /* Nav */
-        e = new ZipEntry("EPUB/nav.xhtml");
-        out.putNextEntry(e);
-
-        Nav nav = new Nav();
-        nav.setItems(opf.getPackage().getManifest().getItemList());
-        out.write(nav.render().getBytes());
-        out.closeEntry();
-
-        /* Lexicon
-        e = new ZipEntry("EPUB/lexicon0.xhtml");
-        out.putNextEntry(e);
-        out.write(new Lexicon().render().getBytes());
-        out.closeEntry();
-        */
 
         out.close();
     }
@@ -143,5 +126,4 @@ public class Epub {
             return null;
         }
     }
-
 }

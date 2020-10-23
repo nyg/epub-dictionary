@@ -17,13 +17,13 @@ public class Metadata {
     /* Requiered elements */
 
     @XmlElement(namespace = "http://purl.org/dc/elements/1.1/", required = true)
-    private Identifier identifier;
+    private final Identifier identifier = new Identifier();
 
     @XmlElement(namespace = "http://purl.org/dc/elements/1.1/", required = true)
-    private Title title;
+    private final Title title = new Title();
 
     @XmlElement(namespace = "http://purl.org/dc/elements/1.1/", required = true)
-    private Language language;
+    private final Language language = new Language();
 
     /* Optional elements */
 
@@ -42,31 +42,16 @@ public class Metadata {
     @XmlElement(name = "meta")
     private final List<Meta> metaList = new ArrayList<>();
 
-    public Metadata() {
-    }
-
     public Identifier getIdentifier() {
         return identifier;
-    }
-
-    public void setIdentifier(Identifier identifier) {
-        this.identifier = identifier;
     }
 
     public Title getTitle() {
         return title;
     }
 
-    public void setTitle(Title title) {
-        this.title = title;
-    }
-
     public Language getLanguage() {
         return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
     }
 
     public Type getType() {

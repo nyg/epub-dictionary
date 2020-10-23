@@ -1,36 +1,26 @@
 package ch.nyg.ed.epub;
 
-import ch.nyg.ed.model.dc.Identifier;
-import ch.nyg.ed.model.dc.Language;
-import ch.nyg.ed.model.dc.Title;
 import ch.nyg.ed.model.dc.Type;
 import ch.nyg.ed.model.opf.Item;
 import ch.nyg.ed.model.opf.Itemref;
-import ch.nyg.ed.model.opf.Manifest;
-import ch.nyg.ed.model.opf.Meta;
-import ch.nyg.ed.model.opf.Metadata;
 import ch.nyg.ed.model.opf.Package;
-import ch.nyg.ed.model.opf.Spine;
 
-import javax.xml.namespace.QName;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Opf {
 
-    private final Package pkg;
+    private final Package pkg = new Package();
 
     public Opf() {
-        pkg = new Package();
         pkg.setVersion(3);
-        pkg.setUniqueIdentifier("uid");
-        pkg.setMetadata(initMetadata());
-        pkg.setManifest(initManifest());
-        pkg.setSpine(initSpine());
+        pkg.getMetadata().setPublisher("nyg/epub-dictionary");
+
+        // TODO user should set this value uid
+        pkg.getMetadata().getIdentifier().setValue("urn:uuid:" + UUID.randomUUID().toString());
+
+        addItem("nav.xhtml", "application/xhtml+xml", "nav", true);
     }
 
     public Package getPackage() {
@@ -76,47 +66,10 @@ public class Opf {
         Itemref itemref = new Itemref();
         itemref.setIdref(id);
 
-        pkg.getManifest().getItemList().add(item);
+        pkg.getManifest().getItems().add(item);
 
         if (addToSpine) {
-            pkg.getSpine().getItemrefList().add(itemref);
+            pkg.getSpine().getItemRefs().add(itemref);
         }
-    }
-
-    private Metadata initMetadata() {
-
-        Identifier identifier = new Identifier();
-        identifier.setId("uid"); // TODO string constant
-        identifier.setValue("urn:uuid:" + UUID.randomUUID().toString());
-
-        Metadata metadata = new Metadata();
-        metadata.setIdentifier(identifier);
-        metadata.setTitle(new Title());
-        metadata.setLanguage(new Language());
-        metadata.setPublisher("nyg/epub-dictionary");
-
-        return metadata;
-    }
-
-    private Manifest initManifest() {
-
-        Item navItem = new Item();
-        navItem.setId("nav");
-        navItem.setHref("nav.xhtml");
-        navItem.setMediaType("application/xhtml+xml");
-        navItem.setProperties("nav");
-
-        List<Item> items = new ArrayList<>();
-        items.add(navItem);
-
-        Manifest manifest = new Manifest();
-        manifest.setItemList(items);
-        return manifest;
-    }
-
-    private Spine initSpine() {
-        Spine spine = new Spine();
-        spine.setItemrefList(new ArrayList<>());
-        return spine;
     }
 }
