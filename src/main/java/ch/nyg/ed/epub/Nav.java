@@ -17,7 +17,7 @@ public class Nav {
         this.title = title;
     }
 
-    public String render(NavRenderer renderer, List<String> filenames) {
+    public String render(NavigationDocumentRenderer renderer, List<String> filenames) {
         return html(head(title(title)),
                 body(
                         nav(

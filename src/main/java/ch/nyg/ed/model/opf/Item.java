@@ -16,7 +16,7 @@ public class Item {
     private String id;
 
     @XmlAttribute(name = "media-type", required = true)
-    private String mediaType;
+    private MediaType mediaType;
 
     /* Optional attributes */
 
@@ -42,11 +42,11 @@ public class Item {
         this.id = id;
     }
 
-    public String getMediaType() {
+    public MediaType getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(String mediaType) {
+    public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
     }
 
