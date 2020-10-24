@@ -2,14 +2,14 @@ package ch.nyg.ed.epub;
 
 import ch.nyg.ed.model.dc.Type;
 import ch.nyg.ed.model.opf.Item;
-import ch.nyg.ed.model.opf.Itemref;
+import ch.nyg.ed.model.opf.ItemRef;
 import ch.nyg.ed.model.opf.Meta;
 import ch.nyg.ed.model.opf.Package;
 
 import javax.xml.namespace.QName;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 public class Opf {
@@ -81,9 +81,18 @@ public class Opf {
 
         // add spine itemref if desired
         if (spineIndex != -1) {
-            Itemref itemref = new Itemref();
-            itemref.setIdref(filename);
-            pkg.getSpine().getItemRefs().add(spineIndex, itemref);
+
+            ItemRef itemRef = new ItemRef();
+            itemRef.setIdRef(filename);
+
+            // add at spineIndex or at the end
+            List<ItemRef> itemRefs = pkg.getSpine().getItemRefs();
+            if (itemRefs.size() <= spineIndex) {
+                itemRefs.add(itemRef);
+            }
+            else {
+                itemRefs.add(spineIndex, itemRef);
+            }
         }
     }
 }

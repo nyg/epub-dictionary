@@ -10,9 +10,9 @@ import java.util.List;
 public class Spine {
 
     @XmlElement(name = "itemref", required = true)
-    private final List<Itemref> itemRefs = new ArrayList<>();
+    private final List<ItemRef> itemRefs = new ArrayList<>();
 
-    public List<Itemref> getItemRefs() {
+    public List<ItemRef> getItemRefs() {
         return itemRefs;
     }
 }

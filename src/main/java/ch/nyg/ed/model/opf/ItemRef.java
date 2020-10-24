@@ -5,21 +5,21 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Itemref {
+public class ItemRef {
 
     /* Required attributes */
 
-    @XmlAttribute(required = true)
-    private String idref;
+    @XmlAttribute(name = "idref", required = true)
+    private String idRef;
 
-    public Itemref() {
+    public ItemRef() {
     }
 
-    public String getIdref() {
-        return idref;
+    public String getIdRef() {
+        return idRef;
     }
 
-    public void setIdref(String idref) {
-        this.idref = idref;
+    public void setIdRef(String idRef) {
+        this.idRef = idRef;
     }
 }

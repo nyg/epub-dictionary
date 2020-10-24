@@ -1,8 +1,10 @@
 package ch.nyg.ed.epub;
 
 import ch.nyg.ed.model.opf.Item;
+import ch.nyg.ed.model.opf.ItemRef;
 import ch.nyg.ed.model.opf.Package;
 import ch.nyg.java.util.LogUtil;
+import j2html.tags.DomContent;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -12,17 +14,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.each;
+import static j2html.TagCreator.li;
+
 public class Epub {
 
-    protected final Opf opf;
+    public static final String NAV_DOC = "nav.xhtml";
 
-    public Epub() {
-        opf = new Opf();
-        opf.addManifestItem("nav.xhtml", "application/xhtml+xml", "nav", 0);
-    }
+    protected final Opf opf = new Opf();
+
+    protected int navPosition = 0;
+    protected NavRenderer navRenderer = filenames -> each(filenames, f -> li(a(f).withHref(f)));
 
     public void setTitle(String title) {
         opf.setTitle(title);
@@ -44,17 +52,23 @@ public class Epub {
         opf.setPublisher(publisher);
     }
 
-    public void addFile(String filename, String mediaType, String properties, int readingOrder) {
-        opf.addManifestItem(filename, mediaType, properties, readingOrder);
-    }
-
     public void addCover(String filename, String mediaType) {
         opf.addManifestItem(filename, mediaType, "cover-image");
+    }
+
+    public void addFile(int readOrder, String filename, String mediaType) {
+        opf.addManifestItem(filename, mediaType, null, readOrder);
+    }
+
+    public void setNavigationRenderer(int readOrder, NavRenderer renderer) {
+        this.navPosition = readOrder;
+        this.navRenderer = renderer;
     }
 
     public void make(String filename) throws IOException, JAXBException {
 
         opf.setModificationDate(ZonedDateTime.now());
+        opf.addManifestItem(NAV_DOC, "application/xhtml+xml", "nav", navPosition);
 
         // Create ZIP file
         File f = new File(filename);
@@ -90,10 +104,11 @@ public class Epub {
             e = new ZipEntry("EPUB/" + item.getHref());
             out.putNextEntry(e);
 
-            if (item.getId().equals("nav.xhtml")) {
+            if (item.getId().equals(NAV_DOC)) {
                 Nav nav = new Nav();
-                nav.setItems(opf.getPackage().getManifest().getItems());
-                out.write(nav.render().getBytes());
+                nav.setTitle("Table of Contents");
+                List<String> filenames = opf.getPackage().getSpine().getItemRefs().stream().map(ItemRef::getIdRef).collect(Collectors.toList());
+                out.write(nav.render(navRenderer, filenames).getBytes());
             }
             else {
                 int len = 0;
